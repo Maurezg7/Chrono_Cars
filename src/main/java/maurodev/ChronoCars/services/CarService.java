@@ -48,10 +48,10 @@ public class CarService implements ICarService{
     }
 
     @Override
-    public void saveCar(Cars cars) {
+    public void saveCar(Cars car) {
         try{
-            if(cars != null){
-                this.carRepository.save(cars);
+            if(car != null){
+                this.carRepository.save(car);
                 logger.info("Car added.");
             }else{
                 logger.info("You must enter the car information correctly.");
@@ -63,16 +63,16 @@ public class CarService implements ICarService{
     }
 
     @Override
-    public void deleteCar(Long id) {
+    public void deleteCar(Cars car) {
         try{
-            if(id >= 0){
-                this.carRepository.deleteById(id);
+            if(car.getId() >= 0){
+                this.carRepository.deleteById(car.getId());
             }else{
                 logger.info("That car doesn't exist or wrong id.");
             }
         }catch (Exception e){
             throw new RuntimeException("Error deleting car: " + e.getMessage());
         }
-        this.carRepository.deleteById(id);
+        this.carRepository.deleteById(car.getId());
     }
 }

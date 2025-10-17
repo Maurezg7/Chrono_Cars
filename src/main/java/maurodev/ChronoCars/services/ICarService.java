@@ -7,6 +7,6 @@ import java.util.List;
 public interface ICarService {
     List<Cars> listCars();
     Cars searchCarByID(Long id);
-    void saveCar(Cars cars);
-    void deleteCar(Long id);
+    void saveCar(Cars car);
+    void deleteCar(Cars car);
 }
