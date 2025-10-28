@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>ChronoCars</title>
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css"/>
+</h:head>
+<h:body>
+    <div class="card">
+        <h:form id="form-car">
+        <p:growl id="messages" showDetail="true"/>
+
+        <div class="card">
+            <p:menubar>
+                <p:menuitem value="Inicio" icon="pi pi-fw pi-home"
+                update=":form-car:cars-table"
+                action="#{indexController.loadData()}"/>
+                <p:menuitem value="New Car" icon="pi pi-fw pi-plus"
+                            action="#{indexController.addCar()}"
+                update=":form-modal:car-window"
+                oncomplete="PF('modalWindowCar').show()"/>
+            </p:menubar>
+        </div>
+
+        <!-- DataTable -->
+        <div class="card">
+            <p:dataTable value="#{indexController.cars}" var="car"
+            id="cars-table" widgetVar="carsTable">
+            <f:facet name="header">
+                <div class="flex justify-content-center flex-wrap
+                                    card-container yellow-container">
+                    <div class="flex align-items-center
+                                justify-content-center
+                                w-20rem h-4rem bg-yellow-500 font-bold
+                                text-gray-900 border-round m-2">
+                        <h3>ChronoCars</h3>
+                    </div>
+                </div>
+            </f:facet>
+
+            <p:column headerText="Id">
+                <h:outputText value="#{car.id}"/>
+            </p:column>
+
+            <p:column headerText="Brand">
+                <h:outputText value="#{car.brand}"/>
+            </p:column>
+
+            <p:column headerText="Model">
+                <h:outputText value="#{car.model}"/>
+            </p:column>
+
+            <p:column headerText="Color">
+                <h:outputText value="#{car.color}"/>
+            </p:column>
+
+            <p:column headerText="Price">
+                <h:outputText value="#{car.price}"/>
+            </p:column>
+
+            <p:column>
+                <p:commandButton value="Edit" icon="pi pi-pencil"
+                                 update=":form-modal:car-window"
+                                 process="@this"
+                                 oncomplete="PF('modalWindowCar').show()"
+                                 class="ui-button-primary"
+                                 style="margin-right: .5rem">
+                    <f:setPropertyActionListener
+                            value="#{car}"
+                            target="#{indexController.selectedCar}"/>
+                    <p:resetInput target=":form-modal:car-window"/>
+                </p:commandButton>
+
+                <p:commandButton value="Delete" class="ui-button-danger"
+                                 icon="pi pi-trash"
+                                 process="@this"
+                                 oncomplete="PF('deleteCarWindow').show()">
+                    <f:setPropertyActionListener
+                            value="#{car}"
+                            target="#{indexController.selectedCar}"/>
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    </div>
+</h:form>
+
+<h:form id="form-modal">
+    <p:dialog header="Car Details" showEffect="fade"
+              modal="true" widgetVar="modalWindowCar"
+              responsive="true">
+        <p:outputPanel id="car-window" class="ui-fluid">
+            <div class="field">
+                <p:outputLabel for="brand">Brand</p:outputLabel>
+                <p:inputText id="brand"
+                             value="#{indexController.selectedCar.brand}"
+                required="true"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="model">Model</p:outputLabel>
+                <p:inputText id="model"
+                             value="#{indexController.selectedCar.model}"
+                required="true"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="color">Color</p:outputLabel>
+                <p:inputText id="color"
+                value="#{indexController.selectedCar.color}"
+                required="true"/>
+            </div>
+            <div class="field">
+                <p:outputLabel for="price">Price</p:outputLabel>
+                <p:inputNumber id="price"
+                               value="#{indexController.selectedCar.price}"
+                required="true"/>
+            </div>
+        </p:outputPanel>
+        <f:facet name="footer">
+            <p:commandButton value="Save" icon="pi pi-check"
+                             process="car-window @this"
+                             action="#{indexController.saveCar()}"/>
+            <p:commandButton value="Cancel" icon="pi pi-times"
+                             onclick="PF('modalWindowCar').hide()"
+                             class="ui-button-secondary" type="button"/>
+        </f:facet>
+    </p:dialog>
+
+    <p:confirmDialog widgetVar="deleteCarWindow"
+                     showEffect="fade" width="300"
+                     message="Delete the car?"
+                     header="Confirm" severity="warn">
+        <p:commandButton value="Yes" icon="pi pi-check"
+                         process="@this"
+                         action="#{indexController.deleteCar()}"
+        oncomplete="PF('deleteCarWindow').hide()"/>
+        <p:commandButton value="No" type="button"
+                         styleClass="ui-button-secondary"
+                         icon="pi pi-times"
+                         onclick="PF('deleteCarWindow').hide()"/>
+    </p:confirmDialog>
+</h:form>
+</div>
+        </h:body>
+        </html>
